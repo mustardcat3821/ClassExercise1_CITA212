@@ -31,4 +31,14 @@ public class plrMovementUpd : MonoBehaviour
         Vector3 Movement = new Vector3(xSpeed, ySpeed, 0f); // Create a movement vector
         transform.Translate(Movement * speed * Time.deltaTime); // Move the player based on input and speed
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("Collision detected." + collision.gameObject.name);
+
+        if (collision.collider.CompareTag("Obstacle"))
+        {
+            Debug.Log("Player collided with Obstacle!");
+        }
+    }
 }
