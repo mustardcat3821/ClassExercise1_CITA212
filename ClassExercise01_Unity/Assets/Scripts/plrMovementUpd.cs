@@ -6,9 +6,15 @@ public class plrMovementUpd : MonoBehaviour
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotateSpeed = 120f;
 
+    bool hasPackage = false;
+    bool hasDelivered = false;
+
+    SpriteRenderer carRender;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        carRender = GetComponent<SpriteRenderer>();
     }
     // Rotation
 
@@ -34,11 +40,32 @@ public class plrMovementUpd : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Collision detected." + collision.gameObject.name);
-
         if (collision.collider.CompareTag("Obstacle"))
         {
-            Debug.Log("Player collided with Obstacle!");
+            Debug.Log("Player collided with Obstacle! " + collision.gameObject.name);
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!hasPackage && other.CompareTag("Trigger"))
+        {
+            hasPackage = true;
+            hasDelivered = false;
+            Debug.Log("Player triggered with Trigger! " + other.gameObject.name);
+            Debug.Log("hasPackage: " + hasPackage);
+            carRender.color = Color.green;
+            Destroy(other.gameObject);
+        }
+
+        if (hasPackage && other.CompareTag("Customer") && other.gameObject.GetComponent<SpriteRenderer>().color != Color.green)
+        {
+            hasPackage = false;
+            hasDelivered = true;
+            Debug.Log("Player triggered with Customer! " + other.gameObject.name);
+            Debug.Log("hasDelivered: " + hasDelivered);
+            carRender.color = Color.red;
+            other.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
         }
     }
 }
