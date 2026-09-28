@@ -1,7 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class plrMovementUpd : MonoBehaviour
+public class particlePlayer : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotateSpeed = 120f;
@@ -9,19 +9,19 @@ public class plrMovementUpd : MonoBehaviour
 
     bool hasPackage = false;
 
-    SpriteRenderer carRender;
+    SpriteRenderer Player;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        carRender = GetComponent<SpriteRenderer>();
+        Player = GetComponent<SpriteRenderer>();
     }
     // Rotation
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q))
         {
             transform.Rotate(0f, 0f, rotateSpeed * Time.deltaTime); // Rotate clockwise
         }
@@ -40,22 +40,15 @@ public class plrMovementUpd : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Obstacle"))
-        {
-            Debug.Log("Player collided with Obstacle! " + collision.gameObject.name);
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Trigger"))
+        if (collision.gameObject.CompareTag("Trigger"))
         {
             hasPackage = true;
-            Debug.Log("Player exited Trigger! " + other.gameObject.name);
+            Debug.Log("Player exited Trigger! " + collision.gameObject.name);
             Debug.Log("hasPackage: " + hasPackage);
-            carRender.color = Color.green;
+            Player.color = Color.green;
+            TestParticle.transform.position = collision.contacts[0].point;
             TestParticle.Play();
-            // Destroy(other.gameObject);
+            // Destroy(collision.gameObject);
         }
     }
 }
