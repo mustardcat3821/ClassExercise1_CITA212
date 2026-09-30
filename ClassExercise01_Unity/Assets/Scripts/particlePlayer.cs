@@ -6,6 +6,7 @@ public class particlePlayer : MonoBehaviour
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotateSpeed = 120f;
     [SerializeField] private ParticleSystem TestParticle;
+    [SerializeField] private ParticleSystem TestParticle2;
 
     bool hasPackage = false;
 
@@ -49,6 +50,17 @@ public class particlePlayer : MonoBehaviour
             TestParticle.transform.position = collision.contacts[0].point;
             TestParticle.Play();
             // Destroy(collision.gameObject);
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D trigger)
+    {
+        if (trigger.CompareTag("Obstacle"))
+        {
+            Debug.Log("Player entered trigger! " + trigger.gameObject.name);
+            Player.color = Color.blue;
+            TestParticle2.transform.position = trigger.ClosestPoint(transform.position);
+            TestParticle2.Play();
         }
     }
 }
